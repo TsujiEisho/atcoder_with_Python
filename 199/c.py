@@ -1,40 +1,33 @@
+"""
+そのまま問題文通りに実装すると計算量的にダメ。
+フリップ操作を誤魔化すことで通すことができる。
+n分ずれてて，2nであまりをとることで誤魔化す。
+こういうのはどうせflipを誤魔化すってなんとなくわかるらしい。
+"""
+
+
 n = int(input())
-S = str(input())
+s = list(input())
 q = int(input())
-Z = []
+
+
+
+flip = False
+
 for i in range(q):
-    Q = list(map(int, input().split()))
-    Z.append(Q)
-ZZ=[]
-c=0; flg = 0
-while c <= q-2:
-    if Z[c][1] == Z[c+1][2] and Z[c][2] == Z[c+1][1]:
-        flg = 1
-    else:
-        if flg == 1:
-            flg = 0
+    t, a, b = map(int, input().split())
+
+    if t == 1:
+        if flip:
+            a -= 1; b -= 1
+            s[(a+n)%(2*n)] , s[(b+n)%(2*n)] = s[(b+n)%(2*n)], s[(a+n)%(2*n)]
         else:
-            ZZ.append(Z[c])
-        # ZZ.append(Z[c+1])
-    c+=1
-ZZ.append(Z[-1])
+            a -= 1; b-= 1 #0-index
+            s[a], s[b] = s[b], s[a]
+    else:       #t == 2
+        flip = not flip
 
-# print(ZZ)
+if flip:
+    s = s[n:] + s[:n]
 
-
-
-for Q in ZZ:
-    if Q[0] == 1:
-        A = S[:Q[1]-1]
-        B = S[Q[1]-1]
-        C = S[Q[1]: Q[2]-1]
-        D = S[Q[2]-1]
-        E = S[Q[2]:]
-
-        S = A+D+C+B+E
-
-    else:
-        A = S[:n]; B = S[n:]
-        S = B+A
-
-print(S)
+print("".join(s))
